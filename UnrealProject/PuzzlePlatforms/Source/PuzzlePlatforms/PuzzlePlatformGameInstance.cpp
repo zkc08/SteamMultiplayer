@@ -28,8 +28,13 @@ UPuzzlePlatformGameInstance::UPuzzlePlatformGameInstance(const FObjectInitialize
 void UPuzzlePlatformGameInstance::Init() 
 {
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
+    UE_LOG(LogTemp, Warning, TEXT("Found subsystem %s"), *Subsystem->GetSubsystemName().ToString());
 	if (Subsystem != nullptr) {
-		UE_LOG(LogTemp, Warning, TEXT("Found subsystem %s"), *Subsystem->GetSubsystemName().ToString());
+        IOnlineSessionPtr SessionInterface = Subsystem->GetSessionInterface();
+        if (SessionInterface.IsValid())
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Found session interface"));
+        }
 	}
 	else 
     {
