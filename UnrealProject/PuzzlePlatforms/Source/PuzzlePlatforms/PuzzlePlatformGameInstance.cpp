@@ -39,16 +39,7 @@ void UPuzzlePlatformGameInstance::Init()
         {
             SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformGameInstance::OnCreateSessionComplete);
             SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformGameInstance::OnDestroySessionComplete);
-            SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatformGameInstance::OnFindSessionsComplete);
-
-            SessionSearch = MakeShareable(new FOnlineSessionSearch());
-            
-            if (SessionSearch.IsValid())
-            {
-                SessionSearch->bIsLanQuery = true;
-                UE_LOG(LogTemp, Error, TEXT("Starting to find sessions"));    
-                SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
-            }            
+            SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatformGameInstance::OnFindSessionsComplete);          
         }
 	}
 	else 
@@ -90,15 +81,32 @@ void UPuzzlePlatformGameInstance::OnDestroySessionComplete(FName SessionName, bo
 	}
 }
 
-void UPuzzlePlatformGameInstance::OnFindSessionsComplete(bool Success) 
+void UPuzzlePlatformGameInstance::RefreshServerList() 
 {
-    if (Success && SessionSearch.IsValid())
+    SessionSearch = MakeShareable(new FOnlineSessionSearch());
+    
+    if (SessionSearch.IsValid())
+    {
+        SessionSearch->bIsLanQuery = true;
+        UE_LOG(LogTemp, Error, TEXT("Starting to find sessions"));    
+        SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+    }  
+}
+
+void UPuzzlePlatformGameInstance::OnFindSessionsComplete(bool Success) 
+{ 
+    if (Success && SessionSearch.IsValid() && Menu != nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Finished Find Session"));
+
+        TArray<FString> ServerNames;
 		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Found sessions : %s"), *SearchResult.GetSessionIdStr());
+            ServerNames.Add(SearchResult.GetSessionIdStr());
 		}
+
+        Menu->SetServerList(ServerNames);
 	}
 }
 

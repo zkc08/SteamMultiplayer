@@ -41,6 +41,8 @@ public:
 
 	virtual void QuitGame() override;
 
+	void RefreshServerList() override;
+
 private:
 	TSubclassOf<class UUserWidget> MenuClass;
 

@@ -20,6 +20,7 @@ public:
 	void Setup();
 	void TearDown();
 	UMainMenu(const FObjectInitializer & ObjectInitializer);
+	void SetServerList(TArray<FString> ServerNames);
 
 protected:
 	virtual bool Initialize() override;
