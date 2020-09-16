@@ -46,6 +46,8 @@ private:
 
 	TSubclassOf<class UUserWidget> InGameMenuClass;
 
+	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+
 	class UMainMenu* Menu;
 
 	class UInGameMenu* InGameMenu;	
@@ -54,6 +56,7 @@ private:
 
 	void OnCreateSessionComplete(FName SessionName, bool Success);
 	void OnDestroySessionComplete(FName SessionName, bool Success);
+	void OnFindSessionsComplete(bool Success);
 
 	void CreateSession();	
 };

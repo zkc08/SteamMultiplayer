@@ -32,13 +32,23 @@ UPuzzlePlatformGameInstance::UPuzzlePlatformGameInstance(const FObjectInitialize
 void UPuzzlePlatformGameInstance::Init() 
 {
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
-    UE_LOG(LogTemp, Warning, TEXT("Found subsystem %s"), *Subsystem->GetSubsystemName().ToString());
+    UE_LOG(LogTemp, Display, TEXT("Found subsystem %s"), *Subsystem->GetSubsystemName().ToString());
 	if (Subsystem != nullptr) {
         SessionInterface = Subsystem->GetSessionInterface();
         if (SessionInterface.IsValid())
         {
             SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformGameInstance::OnCreateSessionComplete);
             SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UPuzzlePlatformGameInstance::OnDestroySessionComplete);
+            SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UPuzzlePlatformGameInstance::OnFindSessionsComplete);
+
+            SessionSearch = MakeShareable(new FOnlineSessionSearch());
+            
+            if (SessionSearch.IsValid())
+            {
+                SessionSearch->bIsLanQuery = true;
+                UE_LOG(LogTemp, Error, TEXT("Starting to find sessions"));    
+                SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+            }            
         }
 	}
 	else 
@@ -74,7 +84,22 @@ void UPuzzlePlatformGameInstance::OnCreateSessionComplete(FName SessionName, boo
 
 void UPuzzlePlatformGameInstance::OnDestroySessionComplete(FName SessionName, bool Success) 
 {
-    
+    if (Success)
+    {
+		CreateSession();
+	}
+}
+
+void UPuzzlePlatformGameInstance::OnFindSessionsComplete(bool Success) 
+{
+    if (Success && SessionSearch.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Finished Find Session"));
+		for (const FOnlineSessionSearchResult& SearchResult : SessionSearch->SearchResults)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Found sessions : %s"), *SearchResult.GetSessionIdStr());
+		}
+	}
 }
 
 
@@ -100,6 +125,9 @@ void UPuzzlePlatformGameInstance::CreateSession()
     if (SessionInterface.IsValid())
     {
         FOnlineSessionSettings SessionSettings;
+        SessionSettings.bIsLANMatch = true;
+        SessionSettings.NumPublicConnections = 2;
+        SessionSettings.bShouldAdvertise = true;
         SessionInterface->CreateSession(0, SESSION_NAME, SessionSettings);
     }
 }

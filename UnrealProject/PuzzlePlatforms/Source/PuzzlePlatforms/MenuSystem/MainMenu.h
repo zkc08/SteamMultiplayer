@@ -19,11 +19,14 @@ public:
 
 	void Setup();
 	void TearDown();
+	UMainMenu(const FObjectInitializer & ObjectInitializer);
 
 protected:
 	virtual bool Initialize() override;
 
 private:
+	TSubclassOf<class UUserWidget> ServerRowClass;
+	
 	UPROPERTY(meta = (BindWidget))
 	class UButton* HostButton;
 
@@ -43,7 +46,7 @@ private:
 	class UWidget* MainMenu;
 
 	UPROPERTY(meta = (BindWidget))
-	class UEditableTextBox* IPAdressField;
+	class UPanelWidget* ServerList;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* JoinGameButton;
@@ -67,4 +70,5 @@ private:
 	void QuitGame();
 
 	IMenuInterface* MenuInterface; 
+
 };
