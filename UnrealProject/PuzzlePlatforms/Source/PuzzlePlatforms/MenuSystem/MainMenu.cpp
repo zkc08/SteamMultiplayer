@@ -80,14 +80,32 @@ void UMainMenu::SetServerList(TArray<FString> ServerNames)
 	    UServerRow* Row = CreateWidget<UServerRow>(World, ServerRowClass);
 		if (!ensure(Row != nullptr)) return;
 
+        uint32 i = 0;
         Row->ServerName->SetText(FText::FromString(ServerName));
+        Row->Setup(this, i);
+        ++i;
 
 		ServerList->AddChild(Row);    
     }
 }
 
+void UMainMenu::SelectIndex(uint32 Index) 
+{
+    SelectedIndex = Index;
+}
+
 void UMainMenu::JoinServer() 
 {
+    if (SelectedIndex.IsSet())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Selected index %d"), SelectedIndex.GetValue());
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Selected index not found"));
+    }
+    
+    
     if (MenuInterface != nullptr)
     {
         // if (!ensure(IPAdressField != nullptr)) return;
