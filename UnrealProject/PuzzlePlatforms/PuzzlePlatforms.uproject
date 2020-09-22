@@ -14,6 +14,17 @@
 			]
 		}
 	],
+	"Plugins": [
+		{
+			"Name": "OnlineSubsystemSteam",
+			"Enabled": true
+		},
+		{
+			"Name": "LDAssistant",
+			"Enabled": false,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/51c5a9a0d5f84beba23aab69bed8d28c"
+		}
+	],
 	"TargetPlatforms": [
 		"LinuxNoEditor",
 		"MacNoEditor",
