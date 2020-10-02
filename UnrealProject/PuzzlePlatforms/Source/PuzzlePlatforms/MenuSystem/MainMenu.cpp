@@ -74,7 +74,7 @@ void UMainMenu::SetServerList(TArray<FString> ServerNames)
     if (!ensure(World != nullptr)) return;
         
     ServerList->ClearChildren();
-
+        
     for (const FString& ServerName : ServerNames)
     {
 	    UServerRow* Row = CreateWidget<UServerRow>(World, ServerRowClass);
@@ -92,6 +92,22 @@ void UMainMenu::SetServerList(TArray<FString> ServerNames)
 void UMainMenu::SelectIndex(uint32 Index) 
 {
     SelectedIndex = Index;
+    UpdateChildren();   
+}
+
+void UMainMenu::UpdateChildren() 
+{
+    for (int32 i = 0; i < ServerList->GetChildrenCount(); ++i)
+    {
+        auto Row = Cast<UServerRow>(ServerList->GetChildAt(i));
+        if (Row != nullptr)
+		{
+            if (SelectedIndex.IsSet())
+            {            
+                Row->Selected = (SelectedIndex.GetValue() == i);
+            }
+		}
+    }
 }
 
 void UMainMenu::JoinServer() 
@@ -104,9 +120,7 @@ void UMainMenu::JoinServer()
     else
     {
         UE_LOG(LogTemp, Error, TEXT("Selected index not found"));
-    }
-    
-    
+    }   
 }
 
 void UMainMenu::QuitGame() 
@@ -116,6 +130,7 @@ void UMainMenu::QuitGame()
         MenuInterface->QuitGame();
     }
 }
+
 
 void UMainMenu::SetMenuInterface(IMenuInterface* MenuInterface) 
 {
