@@ -93,7 +93,6 @@ void UMainMenu::SelectIndex(uint32 Index)
 {
     SelectedIndex = Index;
     UpdateChildren();  
-    UE_LOG(LogTemp, Warning, TEXT("0000000000000 Selected index %d"), SelectedIndex.GetValue());
 }
 
 void UMainMenu::UpdateChildren() 
@@ -103,11 +102,9 @@ void UMainMenu::UpdateChildren()
 		auto Row = Cast<UServerRow>(ServerList->GetChildAt(i));
 		if (Row != nullptr)
 		{
-			Row->Selected = (SelectedIndex.IsSet() && SelectedIndex.GetValue() == i);
-            UE_LOG(LogTemp, Warning, TEXT("1111111111111 Selected index %d"), SelectedIndex.GetValue());           
+			Row->Selected = (SelectedIndex.IsSet() && SelectedIndex.GetValue() == i);   
 		}
 	}
-    UE_LOG(LogTemp, Warning, TEXT("22222222222 Selected index %d"), SelectedIndex.GetValue());
 }
 
 void UMainMenu::JoinServer() 
