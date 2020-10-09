@@ -17,5 +17,6 @@ void UServerRow::Setup(class UMainMenu* InParent, uint32 InIndex)
 
 void UServerRow::OnClicked() 
 {
+    UE_LOG(LogTemp, Warning, TEXT("3333333333 Selected index %d"), Index);
     Parent->SelectIndex(Index);
 }
