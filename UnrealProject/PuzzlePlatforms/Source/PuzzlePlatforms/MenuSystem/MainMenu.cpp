@@ -92,22 +92,19 @@ void UMainMenu::SetServerList(TArray<FString> ServerNames)
 void UMainMenu::SelectIndex(uint32 Index) 
 {
     SelectedIndex = Index;
-    UpdateChildren();   
+    UpdateChildren();  
 }
 
 void UMainMenu::UpdateChildren() 
 {
     for (int32 i = 0; i < ServerList->GetChildrenCount(); ++i)
-    {
-        auto Row = Cast<UServerRow>(ServerList->GetChildAt(i));
-        if (Row != nullptr)
+	{
+		auto Row = Cast<UServerRow>(ServerList->GetChildAt(i));
+		if (Row != nullptr)
 		{
-            if (SelectedIndex.IsSet())
-            {            
-                Row->Selected = (SelectedIndex.GetValue() == i);
-            }
+			Row->Selected = (SelectedIndex.IsSet() && SelectedIndex.GetValue() == i);
 		}
-    }
+	}
 }
 
 void UMainMenu::JoinServer() 
