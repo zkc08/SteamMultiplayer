@@ -23,9 +23,16 @@ public:
 
 	void Setup(class UMainMenu* InParent, uint32 InIndex);
 
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* HostUser;
+
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* ConnectionFraction;
+
 private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* RowButton;
+
 
 	UPROPERTY()
 	class UMainMenu* Parent;
