@@ -107,8 +107,8 @@ void UPuzzlePlatformGameInstance::OnFindSessionsComplete(bool Success)
 			UE_LOG(LogTemp, Error, TEXT("Found sessions : %s"), *SearchResult.GetSessionIdStr());
             FServerData Data;
             Data.Name = SearchResult.GetSessionIdStr();
-            Data.CurrentPlayers = SearchResult.Session.NumOpenPublicConnections;
             Data.MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
+            Data.CurrentPlayers =  Data.MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
             Data.HostUserName = SearchResult.Session.OwningUserName;
             ServerNames.Add(Data);
 		}
