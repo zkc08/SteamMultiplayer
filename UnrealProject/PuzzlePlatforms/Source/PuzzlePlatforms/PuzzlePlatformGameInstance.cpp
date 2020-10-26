@@ -90,7 +90,7 @@ void UPuzzlePlatformGameInstance::RefreshServerList()
         SessionSearch->bIsLanQuery = true;
         SessionSearch->MaxSearchResults = 100;
         SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
-        UE_LOG(LogTemp, Error, TEXT("Starting to find sessions"));    
+        UE_LOG(LogTemp, Error, TEXT("Starting to find sessions"));
         SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
     }  
 }
@@ -107,20 +107,20 @@ void UPuzzlePlatformGameInstance::OnFindSessionsComplete(bool Success)
 		{
 			UE_LOG(LogTemp, Error, TEXT("Found sessions : %s"), *SearchResult.GetSessionIdStr());
             FServerData Data;
+            Data.Name = SearchResult.GetSessionIdStr();
             Data.MaxPlayers = SearchResult.Session.SessionSettings.NumPublicConnections;
             Data.CurrentPlayers =  Data.MaxPlayers - SearchResult.Session.NumOpenPublicConnections;
             Data.HostUserName = SearchResult.Session.OwningUserName;
-            FString ServerName;
-            if (SearchResult.Session.SessionSettings.Get(SERVER_NAME_SETTINGS_KEY, ServerName));
-            {
-                Data.Name = SearchResult.GetSessionIdStr();
-            }
-            else
-            {
-                Data.Name = "Could not find name.";
-            }
-            
-            
+			FString ServerName;
+			if (SearchResult.Session.SessionSettings.Get(SERVER_NAME_SETTINGS_KEY, ServerName))
+			{
+				Data.Name = ServerName;
+			}
+			else
+			{
+				Data.Name = "Could not find name.";
+			}
+                       
             ServerNames.Add(Data);
 		}
 
@@ -155,6 +155,7 @@ void UPuzzlePlatformGameInstance::Host(FString ServerName)
 {
 
     DesiredServerName = ServerName;
+    UE_LOG(LogTemp, Error, TEXT("Desired server name is = %s"), *DesiredServerName);
 
     if (SessionInterface.IsValid())
     {

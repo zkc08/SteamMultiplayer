@@ -25,16 +25,22 @@ bool UMainMenu::Initialize()
     if (!Success) return false;
 
     if (!ensure(HostButton != nullptr)) return false;
-    HostButton->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
+    HostButton->OnClicked.AddDynamic(this, &UMainMenu::OpenHostMenu);
 
     if (!ensure(JoinButton != nullptr)) return false;
     JoinButton->OnClicked.AddDynamic(this, &UMainMenu::OpenJoinMenu);
+
+    if (!ensure(CancelHostButton != nullptr)) return false;
+    CancelHostButton->OnClicked.AddDynamic(this, &UMainMenu::BackToMainMenu);
 
     if (!ensure(BackButton != nullptr)) return false;
     BackButton->OnClicked.AddDynamic(this, &UMainMenu::BackToMainMenu);
 
     if (!ensure(JoinGameButton != nullptr)) return false;
     JoinGameButton->OnClicked.AddDynamic(this, &UMainMenu::JoinServer);
+
+    if (!ensure(HostGameButton != nullptr)) return false;
+    HostGameButton->OnClicked.AddDynamic(this, &UMainMenu::HostServer);
     
     if (!ensure(QuitGameButton != nullptr)) return false;
     QuitGameButton->OnClicked.AddDynamic(this, &UMainMenu::QuitGame);
@@ -46,8 +52,15 @@ void UMainMenu::HostServer()
 {
     if (MenuInterface != nullptr)
     {
-        MenuInterface->Host("Hello");
+        FString ServerName = ServerHostName->Text.ToString();
+        MenuInterface->Host(ServerName);
+        UE_LOG( LogTemp ,Error ,TEXT("ServerName = %s"), *ServerName);
     }
+}
+
+void UMainMenu::OpenHostMenu() 
+{
+    MenuSwitcher->SetActiveWidget(HostMenu);
 }
 
 void UMainMenu::OpenJoinMenu() 
