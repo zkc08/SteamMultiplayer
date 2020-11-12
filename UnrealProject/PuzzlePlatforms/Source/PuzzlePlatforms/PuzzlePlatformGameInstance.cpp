@@ -70,7 +70,7 @@ void UPuzzlePlatformGameInstance::OnCreateSessionComplete(FName SessionName, boo
 
     Engine->AddOnScreenDebugMessage(0, 2, FColor::Green, TEXT("Hosting"));
 
-    GetWorld()->ServerTravel(TEXT("/Game/ThirdPersonCPP/Maps/ThirdPersonExampleMap?listen"));    
+    GetWorld()->ServerTravel(TEXT("/Game/PuzzlePlatforms/Maps/Lobby?listen"));
 }
 
 void UPuzzlePlatformGameInstance::OnDestroySessionComplete(FName SessionName, bool Success) 

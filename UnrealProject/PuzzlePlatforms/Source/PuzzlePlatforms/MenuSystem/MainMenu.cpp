@@ -186,5 +186,3 @@ void UMainMenu::TearDown()
 
 	PlayerController->bShowMouseCursor = false;
 }
-
-
