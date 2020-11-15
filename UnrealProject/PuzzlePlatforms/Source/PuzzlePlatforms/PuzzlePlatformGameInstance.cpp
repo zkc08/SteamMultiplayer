@@ -13,7 +13,7 @@
 #include "MenuSystem/MainMenu.h"
 #include "MenuSystem/InGameMenu.h"
 
-const static FName SESSION_NAME = TEXT("My Game Session");
+const static FName SESSION_NAME = EName::NAME_GameSession;
 const static FName SERVER_NAME_SETTINGS_KEY = TEXT("ServerName");
 
 UPuzzlePlatformGameInstance::UPuzzlePlatformGameInstance(const FObjectInitializer & ObjectInitializer) 
@@ -87,7 +87,7 @@ void UPuzzlePlatformGameInstance::RefreshServerList()
     
     if (SessionSearch.IsValid())
     {
-        SessionSearch->bIsLanQuery = true;
+        SessionSearch->bIsLanQuery = true; 
         SessionSearch->MaxSearchResults = 100;
         SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
         UE_LOG(LogTemp, Error, TEXT("Starting to find sessions"));
@@ -185,7 +185,7 @@ void UPuzzlePlatformGameInstance::CreateSession()
 		{
 			SessionSettings.bIsLANMatch = false;
 		}
-        SessionSettings.NumPublicConnections = 2;
+        SessionSettings.NumPublicConnections = 6;
         SessionSettings.bShouldAdvertise = true;
         SessionSettings.bUsesPresence = true;
         SessionSettings.Set(SERVER_NAME_SETTINGS_KEY, DesiredServerName, EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
@@ -206,6 +206,14 @@ void UPuzzlePlatformGameInstance::Join(uint32 Index)
     }
 
     SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[Index]);
+}
+
+void UPuzzlePlatformGameInstance::StartSession() 
+{
+    if (SessionInterface.IsValid())
+    {
+        SessionInterface->StartSession(SESSION_NAME);
+    }
 }
 
 void UPuzzlePlatformGameInstance::LoadMenu() 
